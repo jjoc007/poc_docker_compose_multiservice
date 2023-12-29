@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  service1:
+    build: ./web-server
+    environment:
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3004/ping"]
+      interval: 2s
+      timeout: 60s
+      retries: 20
+  service2:
+    build: ./web-server
+    environment:
+      - PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      service1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/ping"]
+      interval: 2s
+      timeout: 60s
+      retries: 20
